@@ -8,9 +8,9 @@
  * Return: the value.
  */
 
-char *_getenv(ino_t *ino, const char *name)
+char *_getenv(info_t *info, const char *name)
 {
-	list_t *node = ino->env;
+	list_t *node = info->env;
 	char *p;
 
 	while (node)
@@ -31,14 +31,14 @@ char *_getenv(ino_t *ino, const char *name)
  * Return: always 0.
  */
 
-int populate_env_list(ino_t *ino)
+int populate_env_list(info_t *info)
 {
 	list_t *node = NULL;
 	size_t i;
 
 	for (i = 0; environ[i]; i++)
 		add_node_end(&node, environ[i], 0);
-	ino->env = node;
+	info->env = node;
 	return (0);
 }
 
@@ -50,9 +50,9 @@ int populate_env_list(ino_t *ino)
  * Return: always 0.
  */
 
-int _myenv(ino_t *ino)
+int _myenv(info_t *info)
 {
-	print_list_str(ino->env);
+	print_list_str(info->env);
 	return (0);
 }
 
@@ -65,14 +65,14 @@ int _myenv(ino_t *ino)
  * Return: always 0.
  */
 
-int _mysetenv(ino_t *ino)
+int _mysetenv(info_t *info)
 {
-	if (ino->argc != 3)
+	if (info->argc != 3)
 	{
 		_eputs("Incorrect number of arguments\n");
 		return (1);
 	}
-	if (_setenv(ino, ino->argv[1], ino->argv[2]))
+	if (_setenv(info, info->argv[1], info->argv[2]))
 		return (0);
 	return (1);
 }
@@ -85,17 +85,17 @@ int _mysetenv(ino_t *ino)
  * Return: always 0.
  */
 
-int _myunsetenv(ino_t *ino)
+int _myunsetenv(info_t *info)
 {
 	int i;
 
-	if (ino->argc == 1)
+	if (info->argc == 1)
 	{
 		_eputs("Too few arguments.\n");
 		return (1);
 	}
-	for (i = 1; i <= ino->argc; i++)
-		_unsetenv(ino, ino->argv[i]);
+	for (i = 1; i <= info->argc; i++)
+		_unsetenv(info, info->argv[i]);
 
 	return (0);
 }
